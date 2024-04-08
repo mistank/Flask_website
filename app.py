@@ -1,0 +1,80 @@
+from flask import Flask, request, render_template
+from db_models.User import User
+from database import db
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/todo'
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    return render_template('show_users.html', users=users)
+
+
+@app.route('/users', methods=['POST'])
+def create_user():
+    data = request.form
+    new_user = User(username=data['username'], email=data['email'], password=data['password'])
+    db.session.add(new_user)
+    db.session.commit()
+    return render_template('user_created.html', user=new_user)
+
+
+@app.route('/users/<id>', methods=['PUT'])
+def update_user(id):
+    data = request.get_json()
+    user = User.query.get(id)
+    user.username = data['username']
+    user.email = data['email']
+    db.session.commit()
+    return render_template('user_updated.html', user=user)
+
+
+@app.route('/delete-user/<id>', methods=['GET'])
+def delete_user(id):
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
+    return render_template('user_deleted.html', user=user)
+
+
+@app.route('/create_user', methods=['GET'])
+def show_create_user_form():
+    return render_template('create_user.html')
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    return render_template('login.html')
+
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if(request.method == 'GET'):
+        print("login page")
+        return render_template('login.html')
+    else:
+        print("login post")
+        data = request.form
+        print(data)
+        user = User.query.filter_by(username=data['username']).first()
+        print(data['username'], data['password'])
+        if user and user.password == data['password']:
+            print("login successfull")
+            return render_template('home.html', user=user)
+        return render_template('login_failed.html')
+
+@app.route('/home', methods=['GET'])
+def homepage():
+    return render_template('home.html')
+
+@app.route('/')
+def home():
+    return render_template('login.html')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
