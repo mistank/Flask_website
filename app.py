@@ -3,7 +3,10 @@ from db_models.User import User
 from database import db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/todo'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/todo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://avnadmin:AVNS_2fB5J-vfOPukfXKeSSp@mysql-1bf5496c-bee-keeping.a.aivencloud.com:27137/defaultdb'
+
+
 db.init_app(app)
 with app.app_context():
     db.create_all()
