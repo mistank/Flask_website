@@ -1,0 +1,34 @@
+body, h1, p, a {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0; /* Neutralna pozadinska boja */
+    color: #333; /* Neutralna boja teksta */
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #444; /* Nešto tamnija neutralna boja teksta */
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #666; /* Srednje tamna neutralna boja teksta */
+    margin-bottom: 20px;
+}
+
+a {
+    color: #007bff; /* Neutralna boja linkova */
+    text-decoration: none;
+    transition: color 0.3s ease; /* Glatak prelazak boja */
+}
+
+a:hover {
+    color: #0056b3; /* Tamnija boja linkova prilikom prelaska mišem */
+}
