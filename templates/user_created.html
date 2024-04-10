@@ -5,13 +5,14 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='user_created.css') }}">
+    <title>Kreiran korisnik</title>
 </head>
 <body>
-<!--User created page-->
+
 <h1>User Created</h1>
-<p>{{ user.name }}</p>
-<!--Link to Home Page-->
-<a href="/">Home</a>
+<p>{{ user.username }}</p>
+
+<a href="/home">Home</a>
 </body>
 </html>

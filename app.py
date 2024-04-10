@@ -1,11 +1,11 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, flash, redirect, url_for
 from db_models.User import User
 from database import db
 
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/todo'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://avnadmin:AVNS_2fB5J-vfOPukfXKeSSp@mysql-1bf5496c-bee-keeping.a.aivencloud.com:27137/defaultdb'
-
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = 'mysql://avnadmin:AVNS_2fB5J-vfOPukfXKeSSp@mysql-1bf5496c-bee-keeping.a.aivencloud.com:27137/defaultdb'
 
 db.init_app(app)
 with app.app_context():
@@ -19,12 +19,27 @@ def get_users():
 
 
 @app.route('/users', methods=['POST'])
+# def create_user():
+#     data = request.form
+#     new_user = User(username=data['username'], email=data['email'], password=data['password'])
+#     db.session.add(new_user)
+#     db.session.commit()
+#     return render_template('user_created.html', user=new_user)
 def create_user():
-    data = request.form
-    new_user = User(username=data['username'], email=data['email'], password=data['password'])
-    db.session.add(new_user)
-    db.session.commit()
-    return render_template('user_created.html', user=new_user)
+    if request.method == 'POST':
+        data = request.form
+        existing_user = User.query.filter_by(username=data['username']).first()
+        if existing_user:
+            error_message = 'Korisnik već postoji.'
+            return render_template('create_user.html', error_message=error_message)
+        new_user = User(username=data['username'], email=data['email'], password=data['password'])
+        db.session.add(new_user)
+        db.session.commit()
+        created_username = data['username']
+        success_message = f"Korisnik {created_username} kreiran"
+        return render_template('create_user.html', success_message=success_message, created_username=created_username)
+    else:
+        return render_template('create_user.html')
 
 
 @app.route('/users/<id>', methods=['PUT'])
@@ -49,14 +64,15 @@ def delete_user(id):
 def show_create_user_form():
     return render_template('create_user.html')
 
+
 @app.route('/logout', methods=['GET'])
 def logout():
     return render_template('login.html')
 
 
-@app.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if(request.method == 'GET'):
+    if (request.method == 'GET'):
         print("login page")
         return render_template('login.html')
     else:
@@ -70,14 +86,15 @@ def login():
             return render_template('home.html', user=user)
         return render_template('login_failed.html')
 
+
 @app.route('/home', methods=['GET'])
 def homepage():
     return render_template('home.html')
 
+
 @app.route('/')
 def home():
     return render_template('login.html')
-
 
 
 if __name__ == '__main__':

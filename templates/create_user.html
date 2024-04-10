@@ -2,18 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Kreiranje korisnika</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='create_user.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 <body>
-<!--    Make me a form for creating new user-->
 <form action="/users" method="post">
-    <label for="name">Username</label>
-    <input type="text" name="username" id="name">
-    <label for="email">Email</label>
-    <input type="email" name="email" id="email">
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password">
-    <button type="submit">Create User</button>
+    <h1>Create new user</h1>
+    <div class="container">
+        <label for="name">Username</label>
+        <input type="text" name="username" id="name" required>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+        <button type="submit">Create User</button>
+    </div>
+    <a href="/home" class="home-link">
+        <button type="button" class="custom-button">Home</button>
+    </a>
+    <!--    <div class="error-message">{{ error_message }}</div>-->
+
+    <div class="popup" id="errorPopup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('errorPopup')">&times;</span>
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+
+    <div class="popup" id="successPopup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('successPopup')">&times;</span>
+            <p id="successMessage">Korisnik kreiran: {{ created_username }}</p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var errorMessage = '{{ error_message }}';
+            var successMessage = '{{ success_message }}';
+            if (errorMessage) {
+                showErrorPopup(errorMessage);
+            } else if (successMessage) {
+                showSuccessPopup(successMessage);
+            }
+        });
+
+        function showErrorPopup(message) {
+            document.getElementById("errorMessage").innerText = message;
+            document.getElementById("errorPopup").style.display = "block";
+        }
+
+        function closePopup(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
+
+        function showSuccessPopup(message) {
+            document.getElementById("successMessage").innerText = message;
+            document.getElementById("successPopup").style.display = "block";
+        }
+    </script>
+
+
 </form>
 </body>
 </html>
