@@ -62,7 +62,7 @@ def delete_user(id):
     user = User.query.get(id)
     db.session.delete(user)
     db.session.commit()
-    return render_template('user_deleted.html', user=user)
+    return redirect(url_for('get_users'))
 
 
 @app.route('/create_user', methods=['GET'])
