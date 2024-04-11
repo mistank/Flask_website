@@ -7,7 +7,7 @@ deleteLinks.forEach(link => link.addEventListener('click', (event) => {
     console.log("blablabla")
     console.dir(userId)
     axios.delete('/delete-user/' + userId).then((response) => {
-        link.parent.parent.remove()
+        link.closest('.user').remove()
         console.log("Korisnik uspesno obrisan")
     }).catch(
         (error) => {
