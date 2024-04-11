@@ -17,6 +17,8 @@ submitBtn.addEventListener('click',(event)=>{
         }
     )
 })
+
+
 function showErrorPopup(message) {
     document.getElementById("errorMessage").innerText = message;
     document.getElementById("errorPopup").style.display = "block";

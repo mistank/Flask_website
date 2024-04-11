@@ -40,13 +40,13 @@ h1 {
     text-decoration: underline;
 }
 
-.delete-link {
+#delete-link {
     color: #dc3545;
     text-decoration: none;
     cursor: pointer;
 }
 
-.delete-link:hover {
+#delete-link:hover {
     text-decoration: underline;
 }
 
@@ -60,3 +60,36 @@ h1 {
     top: 20px;
     right: 20px;
 }
+
+#edit-delete-wrapper{
+    display: flex;
+    width: 7rem;
+    justify-content: space-between;
+}
+
+.invisible {
+    display:none;
+}
+
+.edit-form{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.info-wrapper{
+    padding: 0;
+    width: 17rem;
+    display: flex;
+    margin: 1rem 0;
+    justify-content: space-between;
+}
+
+#submit-btn{
+    background-color: #007bff;
+    width: 7rem;
+    padding: 10px;
+    border-radius: 30px;
+    border: none;
+}
+

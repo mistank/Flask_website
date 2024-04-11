@@ -1,5 +1,5 @@
 
-const deleteLinks =Array.from(document.getElementsByClassName('delete-link'))
+const deleteLinks =Array.from(document.querySelectorAll('#delete-link'))
 
 deleteLinks.forEach(link => link.addEventListener('click', (event) => {
     event.preventDefault()

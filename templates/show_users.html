@@ -9,6 +9,7 @@
 </head>
 <script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
 <script type="module" src="/static/JS/delete_user.js" defer></script>
+<script type="module" src="/static/JS/edit_user.js" defer></script>
 <body>
 <div class="container">
     <div class="top-right">
@@ -19,7 +20,23 @@
         {% for user in users %}
         <div class="user">
             <span id="{{user.id}}" class="username">{{ user.username }}</span>
-            <a class="delete-link" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+            <div id="edit-delete-wrapper">
+                <a id="edit-link">Edit</a>
+                <a id="delete-link" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+            </div>
+        </div>
+        <div id="edit-form-wrapper" class="invisible">
+            <form id="edit-form-{{user.id}}" class="edit-form">
+            <div class="info-wrapper">
+                <label for="username">Username:</label><br>
+                <input type="text" id="username" name="username" value="{{user.username}}"><br>
+            </div>
+            <div class="info-wrapper">
+                <label for="email">Email:</label><br>
+                <input type="text" id="email" name="email" value="{{user.email}}"><br>
+            </div>
+            <input id="submit-btn" type="submit" value="Submit">
+        </form>
         </div>
         {% endfor %}
     </div>
