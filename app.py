@@ -12,11 +12,11 @@ with app.app_context():
     db.create_all()
 
 
-@app.before_request
-def request_login():
-    allowed_routes = ['static', 'login']
-    if request.endpoint not in allowed_routes and 'username' not in session:
-        return redirect(url_for('login'))
+# @app.before_request
+# def request_login():
+#     allowed_routes = ['static', 'login']
+#     if request.endpoint not in allowed_routes and 'username' not in session:
+#         return redirect(url_for('login'))
 
 
 @app.route('/users', methods=['GET'])
@@ -38,7 +38,6 @@ def create_user():
         db.session.add(new_user)
         db.session.commit()
         created_username = data['username']
-        success_message = f"Korisnik {created_username} kreiran"
         return jsonify({'status': 'success'}), 200
     else:
         return jsonify({'status': 'error'}), 404
