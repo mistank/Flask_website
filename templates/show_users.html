@@ -2,18 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Korisnici</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='show_users.css') }}">
 </head>
 <body>
-<!--Make me home users page using jinja-->
-<h1>Users</h1>
-{% for user in users %}
-<p>{{ user.username }} <a href="/delete-user/{{ user.id }}" onclick="return confirm('Are you sure you want to delete this user?');" >Delete</a></p>
-{% endfor %}
-<a href="/home">Home</a>
+<div class="container">
+    <div class="top-right">
+        <a href="/home" class="home-link">Home</a>
+    </div>
+    <h1>Users</h1>
+    <div class="user-list">
+        {% for user in users %}
+        <div class="user">
+            <span class="username">{{ user.username }}</span>
+            <a href="/delete-user/{{ user.id }}" class="delete-link" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 </body>
 </html>

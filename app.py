@@ -18,7 +18,7 @@ def get_users():
     return render_template('show_users.html', users=users)
 
 
-@app.route('/users', methods=['POST'])
+@app.route('/users', methods=['POST','GET'])
 # def create_user():
 #     data = request.form
 #     new_user = User(username=data['username'], email=data['email'], password=data['password'])
@@ -37,10 +37,15 @@ def create_user():
         db.session.commit()
         created_username = data['username']
         success_message = f"Korisnik {created_username} kreiran"
-        return render_template('create_user.html', success_message=success_message, created_username=created_username)
+        return redirect(url_for('user_created', success_message=success_message, created_username=created_username))
     else:
         return render_template('create_user.html')
 
+@app.route('/user_created',methods=['GET'])
+def user_created():
+    success_message = request.args.get('success_message')
+    created_username = request.args.get('created_username')
+    return render_template('create_user.html', success_message=success_message, created_username=created_username)
 
 @app.route('/users/<id>', methods=['PUT'])
 def update_user(id):
