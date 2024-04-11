@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Korisnici</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='show_users.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='CSS/show_users.css') }}">
 </head>
+<script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
+<script type="module" src="/static/JS/delete_user.js" defer></script>
 <body>
 <div class="container">
     <div class="top-right">
@@ -16,8 +18,8 @@
     <div class="user-list">
         {% for user in users %}
         <div class="user">
-            <span class="username">{{ user.username }}</span>
-            <a href="/delete-user/{{ user.id }}" class="delete-link" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+            <span id="{{user.id}}" class="username">{{ user.username }}</span>
+            <a class="delete-link" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
         </div>
         {% endfor %}
     </div>

@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Kreiranje korisnika</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='create_user.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='CSS/create_user.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
+    <script src="/static/JS/create_user.js" defer></script>
 
 </head>
 <body>
-<form action="/users" method="post">
+<form id="create-user-frm" action="/users" method="post">
     <h1>Create new user</h1>
     <div class="container">
         <label for="name">Username</label>
@@ -17,7 +19,7 @@
         <input type="email" name="email" id="email" required>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
-        <button type="submit">Create User</button>
+        <button id="submit-btn" type="submit">Create User</button>
     </div>
     <a href="/home" class="home-link">
         <button type="button" class="custom-button">Home</button>
@@ -37,33 +39,6 @@
             <p id="successMessage">Korisnik kreiran: {{ created_username }}</p>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function () {
-            var errorMessage = '{{ error_message }}';
-            var successMessage = '{{ success_message }}';
-            if (errorMessage) {
-                showErrorPopup(errorMessage);
-            } else if (successMessage) {
-                showSuccessPopup(successMessage);
-            }
-        });
-
-        function showErrorPopup(message) {
-            document.getElementById("errorMessage").innerText = message;
-            document.getElementById("errorPopup").style.display = "block";
-        }
-
-        function closePopup(id) {
-            document.getElementById(id).style.display = "none";
-        }
-
-
-        function showSuccessPopup(message) {
-            document.getElementById("successMessage").innerText = message;
-            document.getElementById("successPopup").style.display = "block";
-        }
-    </script>
 
 
 </form>
