@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, flash, redirect, url_for, jsonify, session
 from db_models.User import User
 from database import db
+from sqlalchemy import select
 
 app = Flask(__name__)
 app.config[
@@ -22,25 +23,23 @@ with app.app_context():
 @app.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
+    # return jsonify([user.to_dict() for user in users]),200
     return render_template('show_users.html', users=users)
 
 
 @app.route('/users', methods=['POST', 'GET'])
 def create_user():
-    if request.method == 'POST':
-        data = request.form
-        existing_user = User.query.filter_by(username=data['username']).first()
-        print(existing_user)
-        if existing_user:
-            return jsonify({'status': 'error', 'message': 'User already exists'}), 404
-        new_user = User(username=data['username'], email=data['email'], password=data['password'])
-        print(new_user)
-        db.session.add(new_user)
-        db.session.commit()
-        created_username = data['username']
-        return jsonify({'status': 'success'}), 200
-    else:
-        return jsonify({'status': 'error'}), 404
+    data = request.form
+    existing_user = User.query.filter_by(username=data['username']).first()
+    print(existing_user)
+    if existing_user:
+        return jsonify({'status': 'error', 'message': 'User already exists'}), 404
+    new_user = User(username=data['username'], email=data['email'], password=data['password'])
+    print(new_user)
+    db.session.add(new_user)
+    db.session.commit()
+    created_username = data['username']
+    return jsonify({'status': 'success'}), 200
 
 
 @app.route('/user_created', methods=['GET'])
@@ -54,13 +53,13 @@ def user_created():
 def update_user(id):
     data = request.get_json()
     user = User.query.get(id)
-    if(user.username == data['username'] and user.email == data['email']):
+    if (user.username == data['username'] and user.email == data['email']):
         print("Isti podaci")
-        return jsonify({'status':'error','message':'You entered the same data'}),404
+        return jsonify({'status': 'error', 'message': 'You entered the same data'}), 404
     user.username = data['username']
     user.email = data['email']
     db.session.commit()
-    return jsonify({'status':'success','message':'User successfuly edited'}),200
+    return jsonify({'status': 'success', 'message': 'User successfuly edited'}), 200
 
 
 @app.route('/delete-user/<id>', methods=['DELETE'])
@@ -82,6 +81,11 @@ def logout():
     return redirect(url_for('login'))
 
 
+@app.route('/search-users', methods=['GET'])
+def search_users():
+    users = User.query.filter(User.username.startswith(request.args['name'])).all()
+    return jsonify([user.to_dict() for user in users]),200
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if (request.method == 'GET'):
@@ -97,14 +101,17 @@ def login():
             return render_template('home.html', user=user)
         return render_template('login_failed.html')
 
-@app.route('/search-users', methods=['GET'])
-def search_users():
-    username = request.args.get('username')
-    query = User.query
-    if username:
-        query = query.filter(User.username.ilike(f"%{username}%"))
-    users = query.all()
-    return render_template('show_users.html', users=users, name=username)
+
+# @app.route('/search-users', methods=['GET'])
+# def search_users():
+#     username = request.args.get('username')
+#     query = User.query
+#     if username:
+#         query = query.filter(User.username.ilike(f"{username}%"))
+#     print(query)
+#     users = query.all()
+#     print(users)
+#     return render_template('show_users.html', users=users, name=username)
 
 @app.route('/home', methods=['GET'])
 def homepage():
