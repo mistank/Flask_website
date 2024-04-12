@@ -97,6 +97,14 @@ def login():
             return render_template('home.html', user=user)
         return render_template('login_failed.html')
 
+@app.route('/search-users', methods=['GET'])
+def search_users():
+    username = request.args.get('username')
+    query = User.query
+    if username:
+        query = query.filter(User.username.ilike(f"%{username}%"))
+    users = query.all()
+    return render_template('show_users.html', users=users, name=username)
 
 @app.route('/home', methods=['GET'])
 def homepage():

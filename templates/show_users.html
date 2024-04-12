@@ -10,12 +10,26 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
 <script type="module" src="/static/JS/delete_user.js" defer></script>
 <script type="module" src="/static/JS/edit_user.js" defer></script>
+
+<script type="module" src="/static/JS/search_users.js" defer></script>
 <body>
 <div class="container">
     <div class="top-right">
         <a href="/home" class="home-link">Home</a>
     </div>
     <h1>Users</h1>
+    <form action="/search-users" method="GET" id="search-form">
+        <div class="input-container">
+            <label for="name">Ime:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="button-container">
+            <button type="submit" id="pretrazi">Pretraži</button>
+            <button type="button" id="show-all-btn" name="prikaz2">
+                <a href="/users"> Prikaži sve</a>
+            </button>
+        </div>
+    </form>
     <div class="user-list">
         {% for user in users %}
         <div class="user">
@@ -27,16 +41,16 @@
         </div>
         <div id="edit-form-wrapper" class="invisible">
             <form id="edit-form-{{user.id}}" class="edit-form">
-            <div class="info-wrapper">
-                <label for="username">Username:</label><br>
-                <input type="text" id="username" name="username" value="{{user.username}}"><br>
-            </div>
-            <div class="info-wrapper">
-                <label for="email">Email:</label><br>
-                <input type="text" id="email" name="email" value="{{user.email}}"><br>
-            </div>
-            <input id="submit-btn" type="submit" value="Submit">
-        </form>
+                <div class="info-wrapper">
+                    <label for="username">Username:</label><br>
+                    <input type="text" id="username" name="username" value="{{user.username}}"><br>
+                </div>
+                <div class="info-wrapper">
+                    <label for="email">Email:</label><br>
+                    <input type="text" id="email" name="email" value="{{user.email}}"><br>
+                </div>
+                <input id="submit-btn" type="submit" value="Submit">
+            </form>
         </div>
         {% endfor %}
     </div>
