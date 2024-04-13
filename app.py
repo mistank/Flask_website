@@ -13,17 +13,16 @@ with app.app_context():
     db.create_all()
 
 
-# @app.before_request
-# def request_login():
-#     allowed_routes = ['static', 'login']
-#     if request.endpoint not in allowed_routes and 'username' not in session:
-#         return redirect(url_for('login'))
+@app.before_request
+def request_login():
+    allowed_routes = ['static', 'login']
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect(url_for('login'))
 
 
 @app.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
-    # return jsonify([user.to_dict() for user in users]),200
     return render_template('show_users.html', users=users)
 
 
@@ -39,7 +38,7 @@ def create_user():
     db.session.add(new_user)
     db.session.commit()
     created_username = data['username']
-    return jsonify({'status': 'success'}), 200
+    return jsonify({'status': 'success','message':'User successfully created'}), 200
 
 
 @app.route('/user_created', methods=['GET'])
@@ -54,12 +53,13 @@ def update_user(id):
     data = request.get_json()
     user = User.query.get(id)
     if (user.username == data['username'] and user.email == data['email']):
-        print("Isti podaci")
         return jsonify({'status': 'error', 'message': 'You entered the same data'}), 404
+    elif (User.query.filter_by(username=data['username'], email=data['email']).first()):
+        return jsonify({'status': 'error', 'message': 'User already exists'}), 404
     user.username = data['username']
     user.email = data['email']
     db.session.commit()
-    return jsonify({'status': 'success', 'message': 'User successfuly edited'}), 200
+    return jsonify({'status': 'success', 'message': 'User successfully edited'}), 200
 
 
 @app.route('/delete-user/<id>', methods=['DELETE'])
@@ -67,7 +67,7 @@ def delete_user(id):
     user = User.query.get(id)
     db.session.delete(user)
     db.session.commit()
-    return jsonify({'result': 'success'}), 200
+    return jsonify({'status': 'success'}), 200
 
 
 @app.route('/create_user', methods=['GET'])
@@ -86,10 +86,10 @@ def search_users():
     users = User.query.filter(User.username.startswith(request.args['name'])).all()
     return jsonify([user.to_dict() for user in users]),200
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if (request.method == 'GET'):
-        print("login page")
         return render_template('login.html')
     else:
         print("login post")
@@ -102,6 +102,16 @@ def login():
         return render_template('login_failed.html')
 
 
+@app.route('/home', methods=['GET'])
+def homepage():
+    return render_template('home.html')
+
+
+@app.route('/')
+def home():
+    return redirect(url_for('login'))
+
+
 # @app.route('/search-users', methods=['GET'])
 # def search_users():
 #     username = request.args.get('username')
@@ -112,15 +122,6 @@ def login():
 #     users = query.all()
 #     print(users)
 #     return render_template('show_users.html', users=users, name=username)
-
-@app.route('/home', methods=['GET'])
-def homepage():
-    return render_template('home.html')
-
-
-@app.route('/')
-def home():
-    return render_template('login.html')
 
 
 if __name__ == '__main__':
