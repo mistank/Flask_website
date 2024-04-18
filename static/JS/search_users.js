@@ -1,8 +1,7 @@
-
-document.getElementById('search-form').addEventListener('submit', function(event) {
+document.getElementById('search-form').addEventListener('submit', function (event) {
     event.preventDefault();
     let name = document.getElementById('name').value;
-    axios.get('/search-users', { params: { name: name } })
+    axios.get('/search-users', {params: {name: name}})
         .then(response => {
             let users = response.data;
             updateUsers(users);
@@ -13,20 +12,15 @@ document.getElementById('search-form').addEventListener('submit', function(event
 });
 
 function updateUsers(users) {
-    let userList = document.querySelector('.user-list');
-    userList.innerHTML = '';
-    users.forEach(user => {
-        let userDiv = document.createElement('div');
-        userDiv.className = 'user';
-        userDiv.innerHTML = `
-            <span id="${user.id}" class="username">${user.username}</span>
-            <div id="edit-delete-wrapper">
-                <a id="edit-link">Edit</a>
-                <a id="delete-link" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-            </div>
-        `;
-        userList.appendChild(userDiv);
-    });
+    let userList = document.querySelectorAll('.user');
+    userList.forEach(
+        userDiv => {
+            const div_username = userDiv.querySelector('.username').textContent
+            if (!users.map(user => user.username).includes(div_username)) {
+                userDiv.style.display = 'none'
+            }
+        }
+    )
 }
 
 

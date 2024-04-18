@@ -1,7 +1,8 @@
 from flask import Flask, request, render_template, flash, redirect, url_for, jsonify, session
 from db_models.User import User
 from database import db
-from sqlalchemy import select
+import sqlalchemy
+from sqlalchemy import or_
 
 app = Flask(__name__)
 app.config[
@@ -41,25 +42,25 @@ def create_user():
     return jsonify({'status': 'success','message':'User successfully created'}), 200
 
 
-@app.route('/user_created', methods=['GET'])
-def user_created():
-    success_message = request.args.get('success_message')
-    created_username = request.args.get('created_username')
-    return render_template('create_user.html', success_message=success_message, created_username=created_username)
+# @app.route('/user_created', methods=['GET'])
+# def user_created():
+#     success_message = request.args.get('success_message')
+#     created_username = request.args.get('created_username')
+#     return render_template('create_user.html', success_message=success_message, created_username=created_username)
 
 
 @app.route('/users/<id>', methods=['PATCH'])
 def update_user(id):
     data = request.get_json()
     user = User.query.get(id)
-    if (user.username == data['username'] and user.email == data['email']):
-        return jsonify({'status': 'error', 'message': 'You entered the same data'}), 404
-    elif (User.query.filter_by(username=data['username'], email=data['email']).first()):
-        return jsonify({'status': 'error', 'message': 'User already exists'}), 404
-    user.username = data['username']
-    user.email = data['email']
-    db.session.commit()
-    return jsonify({'status': 'success', 'message': 'User successfully edited'}), 200
+    try:
+        user.username = data['username']
+        user.email = data['email']
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'User successfully edited'}), 200
+    except sqlalchemy.exc.IntegrityError:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': 'User with same data already exists'}), 404
 
 
 @app.route('/delete-user/<id>', methods=['DELETE'])
