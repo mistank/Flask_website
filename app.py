@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, flash, redirect, url_for, jso
 from db_models.User import User
 from database import db
 import sqlalchemy
-from sqlalchemy import or_
+from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 app.config[
@@ -58,7 +58,7 @@ def update_user(id):
         user.email = data['email']
         db.session.commit()
         return jsonify({'status': 'success', 'message': 'User successfully edited'}), 200
-    except sqlalchemy.exc.IntegrityError:
+    except IntegrityError:
         db.session.rollback()
         return jsonify({'status': 'error', 'message': 'User with same data already exists'}), 404
 
